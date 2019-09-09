@@ -1,9 +1,10 @@
 #!/bin/bash
 # dein install
 curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > ~/installer.sh
-sh ~/dein/installer.sh ~/.cache/dein
+sh ~/installer.sh ~/.cache/dein
 mv ~/.cache/* ~/dotfiles/.cache/
 rm ~/installer.sh
+rm -rf ~/.cache
 
 ln -fs ~/dotfiles/_vimrc ~/.vimrc
 ln -fs ~/dotfiles/_zshrc ~/.zshrc
