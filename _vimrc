@@ -1,3 +1,4 @@
+set encoding=utf-8
 if !&compatible
   set nocompatible
 endif
@@ -16,7 +17,7 @@ endif
 let &runtimepath = s:dein_repo_dir .",". &runtimepath
 " プラグイン読み込み＆キャッシュ作成
 "let s:toml_file = fnamemodify(expand('<sfile>'), ':h').'/dein.toml'
-let s:toml_file = s:dein_dir . '/dein.toml'
+let s:toml_file = '~/dotfiles/dein/dein.toml'
 if dein#load_state(s:dein_dir)
   call dein#begin(s:dein_dir)
   call dein#load_toml(s:toml_file)

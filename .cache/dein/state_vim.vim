@@ -1,5 +1,5 @@
 if g:dein#_cache_version !=# 150 || g:dein#_init_runtimepath !=# '/Users/nk/dotfiles/.cache/dein/repos/github.com/Shougo/dein.vim,/Users/nk/.vim,/usr/share/vim/vimfiles,/usr/share/vim/vim80,/usr/share/vim/vimfiles/after,/Users/nk/.vim/after' | throw 'Cache loading error' | endif
-let [plugins, ftplugin] = dein#load_cache_raw(['/Users/nk/.vimrc', '/Users/nk/dotfiles/.cache/dein/dein.toml'])
+let [plugins, ftplugin] = dein#load_cache_raw(['/Users/nk/.vimrc', 'dein/dein.toml'])
 if empty(plugins) | throw 'Cache loading error' | endif
 let g:dein#_plugins = plugins
 let g:dein#_ftplugin = ftplugin
