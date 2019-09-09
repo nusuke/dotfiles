@@ -1,4 +1,3 @@
-" ################dein.vimの設定 
 if !&compatible
   set nocompatible
 endif
@@ -8,9 +7,7 @@ augroup MyAutoCmd
   autocmd!
 augroup END
 
-" dein settings {{{
-" dein自体の自動インストール
-let s:cache_home = empty($XDG_CACHE_HOME) ? expand('~/.cache') : $XDG_CACHE_HOME
+let s:cache_home = empty($XDG_CACHE_HOME) ? expand('~/dotfiles/.cache') : $XDG_CACHE_HOME
 let s:dein_dir = s:cache_home . '/dein'
 let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
 if !isdirectory(s:dein_repo_dir)
@@ -30,8 +27,8 @@ endif
 if has('vim_starting') && dein#check_install()
   call dein#install()
 endif
-" }}}
-" ################ deinの設定fi
+
+" costom
 
 set nocompatible              " be iMproved, required
 syntax on
@@ -127,6 +124,9 @@ set guioptions-=e
 " ESC連打でハイライト解除
 nmap <Esc><Esc> :nohlsearch<CR><Esc>
 
+" ファイルツリーショートカット
+nnoremap <silent><C-e> :NERDTreeToggle<CR>
 " 色の設定
 autocmd ColorScheme * highlight LineNr ctermfg=123
 highlight Statement ctermfg=150
+hi Comment ctermfg=DarkGray
