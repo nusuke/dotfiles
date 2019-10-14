@@ -25,3 +25,6 @@ on_ft = ['typescript']
 repo     = 'prettier/vim-prettier'
 build    = 'npm install'
 on_ft    = ['javascript', 'typescript', 'vue', 'css', 'scss', 'json', 'markdown']
+
+[[plugins]]
+repo = 'tpope/vim-surround'
