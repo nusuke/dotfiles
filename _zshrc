@@ -1,7 +1,11 @@
 # Source Prezto.
-if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
-  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
-fi
+alias zshrc='vim ~/.zshrc'
+alias zshrcs='source ~/.zshrc'
+# Source Prezto.
+
+#if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
+#  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+#fi
 
 # Customize to your needs...
 #
@@ -23,6 +27,9 @@ export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-11.0.2.jdk/Contents/Home
 # zsh
 autoload -U compinit
 compinit
+
+autoload -Uz colors
+colors
 
 # 履歴ファイルの保存先
 export HISTFILE=${HOME}/.zhistory
@@ -63,3 +70,30 @@ ISTIGNORE='fg:fg *bg:bg *histroy:history *'
 #Directory color 
 alias ls='ls -FG'
 export LSCOLORS=cafxcxdxbxegedabagacad
+
+alias mkdir='mkdir -p'
+
+
+# fzf
+
+# PROMPT
+PROMPT="%{${fg[blue]}%}[%~]%{${reset_color}%}"
+
+autoload -Uz vcs_info
+setopt prompt_subst
+zstyle ':vcs_info:git:*' check-for-changes true
+zstyle ':vcs_info:git:*' stagedstr "%F{yellow}!"
+zstyle ':vcs_info:git:*' unstagedstr "%F{red}+"
+zstyle ':vcs_info:*' formats "%F{green}%c%u[%b]%f"
+zstyle ':vcs_info:*' actionformats '[%b|%a]'
+precmd () { 
+  if [ $? -eq 0 ] ; then
+    finish_code=0
+  else
+    finish_code="%{${fg[red]}}'${$?}'%{${reset_color}%}"
+  fi
+  vcs_info 
+}
+
+PROMPT='${finish_code};'$PROMPT
+RPROMPT=$RPROMPT'${vcs_info_msg_0_}'
