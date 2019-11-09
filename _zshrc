@@ -1,4 +1,5 @@
-# Source Prezto.
+# ctrl e ctrl a など
+bindkey -e
 alias zshrc='vim ~/.zshrc'
 alias zshrcs='source ~/.zshrc'
 # Source Prezto.
@@ -39,8 +40,6 @@ export HISTSIZE=1000
 export SAVEHIST=100000
 # 重複を記録しない
 setopt hist_ignore_dups
-# 開始と終了を記録
-setopt EXTENDED_HISTORY
 # historyを共有
 setopt share_history
 # ヒストリに追加されるコマンド行が古いものと同じなら古いものを削除
@@ -60,21 +59,40 @@ setopt hist_expand
 # 履歴をインクリメンタルに追加
 setopt inc_append_history
 # インクリメンタルからの検索
-bindkey "^R" history-incremental-search-backward
-bindkey "^S" history-incremental-search-forward
+#bindkey "^R" history-incremental-search-backward
+#bindkey "^S" history-incremental-search-forward
 # 全件取得
 function history-all { history -E 1 }
 
 ISTIGNORE='fg:fg *bg:bg *histroy:history *'
 
 #Directory color 
-alias ls='ls -FG'
+#alias ls='ls -FG'
 export LSCOLORS=cafxcxdxbxegedabagacad
-
+alias ls='exa'
 alias mkdir='mkdir -p'
 
 
 # fzf
+export FZF_DEFAULT_OPTS="--height 50% --layout=reverse --border --inline-info --preview 'bat  --color=always --style=header,grid --line-range :100 {}'"
+#export FZF_CTRL_T_COMMAND=rg --files --hidden --follow --glob "!.git/*"
+#export FZF_CTRL_T_OPTS=--preview "bat  --color=always --style=header,grid --line-range :100 {}"
+
+alias fcd='cd $(exa -l | grep ^d | awk '\''{print $7}'\'' | fzf -m --preview "exa {}")'
+alias fcda='cd $(exa -la | grep ^d | awk '\''{print $7}'\'' | fzf -m --preview "exa {}")'
+alias fr='ghq look $(ghq list | fzf-tmux --reverse +m )'
+fvim() {
+  files=$(git ls-files) &&
+  selected_files=$(echo "$files" | fzf -m --preview "bat  --color=always --style=header,grid --line-range :100 {}") &&
+  vim $selected_files
+}
+fb() {
+  local branches branch
+  branches=$(git branch --all | grep -v HEAD) &&
+  branch=$(echo "$branches" |
+           fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
+  git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
+}
 
 # PROMPT
 PROMPT="%{${fg[blue]}%}[%~]%{${reset_color}%}"
@@ -90,10 +108,11 @@ precmd () {
   if [ $? -eq 0 ] ; then
     finish_code=0
   else
-    finish_code="%{${fg[red]}}'${$?}'%{${reset_color}%}"
+    finish_code="%{${fg[red]}%}'${$?}'%{${reset_color}%}"
   fi
   vcs_info 
 }
 
 PROMPT='${finish_code};'$PROMPT
 RPROMPT=$RPROMPT'${vcs_info_msg_0_}'
+
