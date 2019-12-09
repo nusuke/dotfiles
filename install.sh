@@ -9,4 +9,3 @@ rm -rf ~/.cache
 ln -fs ~/dotfiles/_vimrc ~/.vimrc
 ln -fs ~/dotfiles/_zshrc ~/.zshrc
 
-

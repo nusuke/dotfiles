@@ -1,7 +1,10 @@
 # ctrl e ctrl a など
 bindkey -e
-alias zshrc='vim ~/.zshrc'
+alias zshrc='vim ~/dotfiles/_zshrc'
 alias zshrcs='source ~/.zshrc'
+alias gitconfig='vim ~/.gitconfig'
+alias sshconfig='vim ~/.sshconfig'
+alias vimrc='~/dotfiles/_vimrc'
 # Source Prezto.
 
 #if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
@@ -81,6 +84,10 @@ export FZF_DEFAULT_OPTS="--height 50% --layout=reverse --border --inline-info --
 alias fcd='cd $(exa -l | grep ^d | awk '\''{print $7}'\'' | fzf -m --preview "exa {}")'
 alias fcda='cd $(exa -la | grep ^d | awk '\''{print $7}'\'' | fzf -m --preview "exa {}")'
 alias fr='ghq look $(ghq list | fzf-tmux --reverse +m )'
+gd() {
+  files=$(git diff --name-only | fzf --preview 'git diff --color {}') &&
+  vim $files
+}
 fvim() {
   files=$(git ls-files) &&
   selected_files=$(echo "$files" | fzf -m --preview "bat  --color=always --style=header,grid --line-range :100 {}") &&
@@ -93,6 +100,37 @@ fb() {
            fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
   git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
 }
+
+function chpwd() {
+  powered_cd_add_log
+}
+function powered_cd_add_log() {
+  local i=0
+  cat ~/.powered_cd.log | while read line; do
+    (( i++ ))
+    if [ i = 30 ]; then
+      sed -i -e "30,30d" ~/.powered_cd.log
+    elif [ "$line" = "$PWD" ]; then
+      sed -i -e "${i},${i}d" ~/.powered_cd.log
+    fi
+  done
+  echo "$PWD" >> ~/.powered_cd.log
+}
+function powered_cd() {
+  if [ $# = 0 ]; then
+    cd $(gtac ~/.powered_cd.log | fzf)
+  elif [ $# = 1 ]; then
+    cd $1
+  else
+    echo "powered_cd: too many arguments"
+  fi
+}
+_powered_cd() {
+  _files -/
+}
+compdef _powered_cd powered_cd
+[ -e ~/.powered_cd.log ] || touch ~/.powered_cd.log
+alias c="powered_cd"
 
 # PROMPT
 PROMPT="%{${fg[blue]}%}[%~]%{${reset_color}%}"
@@ -113,6 +151,9 @@ precmd () {
   vcs_info 
 }
 
-PROMPT='${finish_code};'$PROMPT
-RPROMPT=$RPROMPT'${vcs_info_msg_0_}'
+function command_not_found_handler() {
+  echo "misssing→「$1」";
+}
+PROMPT='${finish_code};'$PROMPT'${vcs_info_msg_0_}'
+#RPROMPT=$RPROMPT'${vcs_info_msg_0_}'
 
