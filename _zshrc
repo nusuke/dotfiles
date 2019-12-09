@@ -94,13 +94,8 @@ fvim() {
   selected_files=$(echo "$files" | fzf -m --preview "bat  --color=always --style=header,grid --line-range :100 {}") &&
   vim $selected_files
 }
-fb() {
-  local branches branch
-  branches=$(git branch --all | grep -v HEAD) &&
-  branch=$(echo "$branches" |
-           fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
-  git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
-}
+# git checkout branchをfzfで選択
+alias fb='git checkout $(git branch -a | tr -d " " |fzf --prompt "CHECKOUT BRANCH>" --preview "git log --color=always {}" | head -n 1 | sed -e "s/^\*\s*//g" | perl -pe "s/remotes\/origin\///g")'
 
 function chpwd() {
   powered_cd_add_log
@@ -119,7 +114,7 @@ function powered_cd_add_log() {
 }
 function powered_cd() {
   if [ $# = 0 ]; then
-    cd $(gtac ~/.powered_cd.log | fzf)
+    cd $(gtac ~/.powered_cd.log | fzf -m --preview "ls {}")
   elif [ $# = 1 ]; then
     cd $1
   else
