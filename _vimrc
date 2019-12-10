@@ -133,3 +133,5 @@ nnoremap <silent><C-e> :NERDTreeToggle<CR>
 autocmd ColorScheme * highlight LineNr ctermfg=123
 highlight Statement ctermfg=150
 hi Comment ctermfg=DarkGray
+
+autocmd BufNewFile,BufRead _zshrc  set filetype=sh

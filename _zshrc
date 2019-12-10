@@ -82,6 +82,9 @@ export FZF_DEFAULT_OPTS="--height 50% --layout=reverse --border --inline-info --
 #export FZF_CTRL_T_COMMAND=rg --files --hidden --follow --glob "!.git/*"
 #export FZF_CTRL_T_OPTS=--preview "bat  --color=always --style=header,grid --line-range :100 {}"
 
+function bats() {
+  $(bat $1 | fzf --preview "{}")
+}
 alias fcd='cd $(exa -l | grep ^d | awk '\''{print $7}'\'' | fzf -m --preview "exa {}")'
 alias fcda='cd $(exa -la | grep ^d | awk '\''{print $7}'\'' | fzf -m --preview "exa {}")'
 alias fr='ghq look $(ghq list | fzf-tmux --reverse +m )'
@@ -152,4 +155,3 @@ function command_not_found_handler() {
 }
 PROMPT='${finish_code};'$PROMPT'${vcs_info_msg_0_}'
 #RPROMPT=$RPROMPT'${vcs_info_msg_0_}'
-
