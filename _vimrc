@@ -130,6 +130,7 @@ nmap <Esc><Esc> :nohlsearch<CR><Esc>
 " ファイルツリーショートカット
 nnoremap <silent><C-e> :NERDTreeToggle<CR>
 " 色の設定
+colorscheme molokai
 autocmd ColorScheme * highlight LineNr ctermfg=123
 highlight Statement ctermfg=150
 hi Comment ctermfg=DarkGray

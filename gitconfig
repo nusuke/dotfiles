@@ -3,6 +3,8 @@ graph = log --graph --date=short --decorate=short --pretty=format:'%Cgreen%h %Cr
 see = browse
 st = status
 stat = status
+sw = checkout
+fetch = fetch -p
 
 [ghq]
   root = ~/workspace

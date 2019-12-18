@@ -6,6 +6,7 @@ alias gitconfig='vim ~/.gitconfig'
 alias sshconfig='vim ~/.sshconfig'
 alias vimrc='~/dotfiles/_vimrc'
 alias dotfiles='cd ~/dotfiles'
+alias desktop='cd ~/desktop'
 # Source Prezto.
 
 #if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then

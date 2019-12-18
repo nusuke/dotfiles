@@ -9,13 +9,7 @@ repo = 'cespare/vim-toml'
 on_ft = 'toml'
 
 [[plugins]] # カラースキーマ
-repo = 'w0ng/vim-hybrid'
-hook_add = '''
-  set background=dark
-  " colorscheme 設定は source 後に行う必要があるので VimEnter で行う。
-  " 但し Colorscheme イベントの発生が抑制されないよう nented を付ける。
-  au MyAutoCmd VimEnter * nested colorscheme hybrid
-'''
+repo = 'tomasr/molokai'
 
 [[plugins]]
 repo = 'leafgarland/typescript-vim'
@@ -73,3 +67,12 @@ hook_add = '''
   nmap <silent> gi <Plug>(coc-implementation)
   nmap <silent> gr <Plug>(coc-references)
 '''
+
+[[plugins]]
+  repo = 'prabirshrestha/async.vim'
+[[plugins]]
+  repo = 'prabirshrestha/vim-lsp'
+[[plugins]]
+  repo = 'prabirshrestha/asyncomplete.vim'
+[[plugins]]
+  repo = 'prabirshrestha/asyncomplete-lsp.vim'
