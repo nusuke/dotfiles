@@ -12,6 +12,9 @@ on_ft = 'toml'
 repo = 'tomasr/molokai'
 
 [[plugins]]
+repo = 'itchyny/lightline.vim'
+
+[[plugins]]
 repo = 'leafgarland/typescript-vim'
 on_ft = ['typescript']
 

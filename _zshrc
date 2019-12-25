@@ -4,7 +4,7 @@ alias zshrc='vim ~/dotfiles/_zshrc'
 alias zshrcs='source ~/.zshrc'
 alias gitconfig='vim ~/.gitconfig'
 alias sshconfig='vim ~/.sshconfig'
-alias vimrc='~/dotfiles/_vimrc'
+alias vimrc='vim ~/dotfiles/_vimrc'
 alias dotfiles='cd ~/dotfiles'
 alias desktop='cd ~/desktop'
 # Source Prezto.
