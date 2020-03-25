@@ -7,6 +7,7 @@ alias sshconfig='vim ~/.sshconfig'
 alias vimrc='vim ~/dotfiles/_vimrc'
 alias dotfiles='cd ~/dotfiles'
 alias desktop='cd ~/desktop'
+
 # Source Prezto.
 
 #if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
@@ -76,7 +77,7 @@ ISTIGNORE='fg:fg *bg:bg *histroy:history *'
 export LSCOLORS=cafxcxdxbxegedabagacad
 alias ls='exa'
 alias mkdir='mkdir -p'
-
+alias cat='bat'
 
 # fzf
 export FZF_DEFAULT_OPTS="--height 50% --layout=reverse --border --inline-info --preview 'bat  --color=always --style=header,grid --line-range :100 {}'"
@@ -88,7 +89,7 @@ function bats() {
 }
 alias fcd='cd $(exa -l | grep ^d | awk '\''{print $7}'\'' | fzf -m --preview "exa {}")'
 alias fcda='cd $(exa -la | grep ^d | awk '\''{print $7}'\'' | fzf -m --preview "exa {}")'
-alias fr='ghq look $(ghq list | fzf-tmux --reverse +m )'
+alias fr='ghq look $(ghq list | fzf-tmux --reverse +m --preview "cat ~/{}/README.md")'
 gd() {
   files=$(git diff --name-only | fzf --preview 'git diff --color {}') &&
   vim $files
