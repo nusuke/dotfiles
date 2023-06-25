@@ -7,5 +7,8 @@ brew install fd
 brew install exa
 brew install ghq
 brew install bottom
+brew install --cask raycast
+brew install --cask warp
+
 
 git config --global ghq.root ~/src
