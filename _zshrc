@@ -7,6 +7,8 @@ alias sshconfig='vim ~/.sshconfig'
 alias vimrc='vim ~/dotfiles/_vimrc'
 alias dotfiles='cd ~/dotfiles'
 alias desktop='cd ~/desktop'
+alias fm='git fetch -p && git merge --ff-only origin/$b'$
+export b=$(git rev-parse --abbrev-ref HEAD)$
 
 # Source Prezto.
 #if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
