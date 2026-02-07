@@ -11,9 +11,9 @@ fetch = fetch -p
 	root = ~/src
 
 [commit]
-  template = ~/dotfiles/.commit_template
+  template = ~/.commit_template
 
 [core]
-  excludesfile = ~/dotfiles/.gitignore.global
+  excludesfile = ~/.gitignore.global
 
 

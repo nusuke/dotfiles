@@ -1,37 +1,5 @@
 set encoding=utf-8
-if !&compatible
-  set nocompatible
-endif
-
-" reset augroup
-augroup MyAutoCmd
-  autocmd!
-augroup END
-
-let s:cache_home = empty($XDG_CACHE_HOME) ? expand('~/dotfiles/.cache') : $XDG_CACHE_HOME
-let s:dein_dir = s:cache_home . '/dein'
-let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
-if !isdirectory(s:dein_repo_dir)
-  call system('git clone https://github.com/Shougo/dein.vim ' . shellescape(s:dein_repo_dir))
-endif
-let &runtimepath = s:dein_repo_dir .",". &runtimepath
-" プラグイン読み込み＆キャッシュ作成
-"let s:toml_file = fnamemodify(expand('<sfile>'), ':h').'/dein.toml'
-let s:toml_file = '~/dotfiles/dein/dein.toml'
-if dein#load_state(s:dein_dir)
-  call dein#begin(s:dein_dir)
-  call dein#load_toml(s:toml_file)
-  call dein#end()
-  call dein#save_state()
-endif
-" 不足プラグインの自動インストール
-if has('vim_starting') && dein#check_install()
-  call dein#install()
-endif
-
-" costom
-
-set nocompatible              " be iMproved, required
+set nocompatible
 syntax on
 set fenc=utf-8
 " escapeをjjにキーバインディング
@@ -101,8 +69,8 @@ nnoremap k gk
 " Tab系
 " 不可視文字を可視化(タブが「▸-」と表示される)
 set list listchars=tab:\▸\-,eol:$
-hi NonText    ctermbg=None ctermfg=59 guibg=NONE guifg=None
-hi SpecialKey ctermbg=None ctermfg=59 guibg=NONE guifg=None
+hi NonText    ctermbg=NONE ctermfg=59 guibg=NONE guifg=NONE
+hi SpecialKey ctermbg=NONE ctermfg=59 guibg=NONE guifg=NONE
 " Tab文字を半角スペースにする
 set expandtab
 " 行頭以外のTab文字の表示幅（スペースいくつ分）
@@ -160,12 +128,6 @@ set guioptions-=e
 " ESC連打でハイライト解除
 nmap <Esc><Esc> :nohlsearch<CR><Esc>
 
-" ファイルツリーショートカット
-nnoremap <silent><C-e> :NERDTreeToggle<CR>
-" 色の設定
-colorscheme molokai
-autocmd ColorScheme * highlight LineNr ctermfg=123
-highlight Statement ctermfg=150
 hi Comment ctermfg=DarkGray
 
 autocmd BufNewFile,BufRead _zshrc  set filetype=sh
