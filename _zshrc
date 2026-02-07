@@ -20,8 +20,6 @@ function fm(){
 }
 alias ghpr='gh pr create --web'
 
-# git homebewから入れた物を使う
-export PATH=/usr/local/Cellar/git/2.20.1/bin:$PATH
 
 #Java
 export PATH=$PATH:/Library/Java/JavaVirtualMachines/jdk-11.0.2.jdk/Contents/Home/bin
@@ -113,12 +111,18 @@ precmd () {
     finish_code="%{${fg[red]}%}'${$?}'%{${reset_color}%}"
   fi
   vcs_info
+
+  # worktree検出
+  local git_dir=$(git rev-parse --git-dir 2>/dev/null)
+  if [[ "$git_dir" == *"/worktrees/"* ]]; then
+    local wt_name=$(basename "$git_dir")
+    worktree_info="%{${fg[magenta]}%}[wt:${wt_name}]%{${reset_color}%}"
+  else
+    worktree_info=""
+  fi
 }
 
-#function command_not_found_handler() {
-#  echo "misssing→「$1」";
-#}
-PROMPT='${finish_code};'$PROMPT'${vcs_info_msg_0_}'
+PROMPT='${finish_code};'$PROMPT'${vcs_info_msg_0_}${worktree_info}'
 #RPROMPT=$RPROMPT'${vcs_info_msg_0_}'
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
@@ -143,8 +147,8 @@ alias wtp='git worktree prune'
 function wta() {
   local branch=$1
   local repo=$(basename "$(git rev-parse --show-toplevel)")
-  local path=${2:-"../${repo}-${branch}"}
-  git worktree add "$path" "$branch"
+  local wt_path=${2:-"../${repo}-${branch}"}
+  git worktree add "$wt_path" "$branch"
 }
 
 # worktreeを作成（新規ブランチ）: wtan <new-branch-name> [base-branch] [path]
@@ -152,8 +156,8 @@ function wtan() {
   local branch=$1
   local base=${2:-"HEAD"}
   local repo=$(basename "$(git rev-parse --show-toplevel)")
-  local path=${3:-"../${repo}-${branch}"}
-  git worktree add -b "$branch" "$path" "$base"
+  local wt_path=${3:-"../${repo}-${branch}"}
+  git worktree add -b "$branch" "$wt_path" "$base"
 }
 
 # fzfでworktreeを選択して移動
@@ -178,9 +182,9 @@ function fwta() {
   local branch=$(git branch -a | tr -d " " | sed 's/^\*//g' | sed 's/remotes\/origin\///g' | sort -u | fzf --prompt "SELECT BRANCH>")
   if [[ -n "$branch" ]]; then
     local repo=$(basename "$(git rev-parse --show-toplevel)")
-    local path="../${repo}-${branch}"
-    echo "Creating worktree: $path for branch: $branch"
-    git worktree add "$path" "$branch"
+    local wt_path="../${repo}-${branch}"
+    echo "Creating worktree: $wt_path for branch: $branch"
+    git worktree add "$wt_path" "$branch"
   fi
 }
 

@@ -7,7 +7,6 @@ sw = switch
 fetch = fetch -p
 
 [ghq]
-  root = ~/workspace
 	root = ~/src
 
 [commit]
