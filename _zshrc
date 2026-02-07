@@ -1,32 +1,27 @@
 # ctrl e ctrl a など
 bindkey -e
-alias zshrc='vim ~/dotfiles/_zshrc'
+alias zshrc='vim ~/.zshrc'
 alias zshrcs='source ~/.zshrc'
 alias gitconfig='vim ~/.gitconfig'
-alias sshconfig='vim ~/.sshconfig'
-alias vimrc='vim ~/dotfiles/_vimrc'
+alias sshconfig='vim ~/.ssh/config'
+alias vimrc='vim ~/.vimrc'
 alias dotfiles='cd ~/dotfiles'
 alias desktop='cd ~/desktop'
-alias fm='git fetch -p && git merge --ff-only origin/$b'$
-export b=$(git rev-parse --abbrev-ref HEAD)$
+alias lzd='lazydocker'
+alias idea='/Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS/idea'
+alias dcd='docker compose down'
+alias dcu='docker compose up'
+alias dcud='docker compose up -d'
 
-# Source Prezto.
-#if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
-#  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
-#fi
+function fm(){
+ git fetch -p
+ current_branch=$(git branch --show-current)
+ git merge --ff-only origin/$current_branch
+}
+alias ghpr='gh pr create --web'
 
-# Customize to your needs...
-#
 # git homebewから入れた物を使う
 export PATH=/usr/local/Cellar/git/2.20.1/bin:$PATH
-
-# nodebrewのpath
-export PATH=$HOME/.nodebrew/current/bin:$PATH
-
-# rbenv
-[[ -d ~/.rbenv  ]] && \
-  export PATH=${HOME}/.rbenv/bin:${PATH} && \
-  eval "$(rbenv init -)" 
 
 #Java
 export PATH=$PATH:/Library/Java/JavaVirtualMachines/jdk-11.0.2.jdk/Contents/Home/bin
@@ -56,8 +51,8 @@ setopt hist_ignore_space
 # ヒストリを呼び出してから実行する間に一旦編集可能
 setopt hist_verify
 # 余分な空白は詰めて記録
-setopt hist_reduce_blanks  
-# 古いコマンドと同じものは無視 
+setopt hist_reduce_blanks
+# 古いコマンドと同じものは無視
 setopt hist_save_no_dups
 # historyコマンドは履歴に登録しない
 setopt hist_no_store
@@ -73,24 +68,21 @@ function history-all { history -E 1 }
 
 ISTIGNORE='fg:fg *bg:bg *histroy:history *'
 
-#Directory color 
+#Directory color
 #alias ls='ls -FG'
 export LSCOLORS=cafxcxdxbxegedabagacad
-alias ls='exa'
+alias ls='eza'
 alias mkdir='mkdir -p'
 alias cat='bat'
 
 # fzf
 export FZF_DEFAULT_OPTS="--height 50% --layout=reverse --border --inline-info --preview 'bat  --color=always --style=header,grid --line-range :100 {}'"
-#export FZF_CTRL_T_COMMAND=rg --files --hidden --follow --glob "!.git/*"
-#export FZF_CTRL_T_OPTS=--preview "bat  --color=always --style=header,grid --line-range :100 {}"
 
 function bats() {
   $(bat $1 | fzf --preview "{}")
 }
-alias fcd='cd $(exa -l | grep ^d | awk '\''{print $7}'\'' | fzf -m --preview "exa {}")'
-alias fcda='cd $(exa -la | grep ^d | awk '\''{print $7}'\'' | fzf -m --preview "exa {}")'
-alias fr='ghq look $(ghq list | fzf-tmux --reverse +m --preview "cat ~/{}/README.md")'
+
+alias fr='cd ~/src/$(ghq list | fzf --tmux --reverse +m --preview "cat ~/{}/README.md")'
 gd() {
   files=$(git diff --name-only | fzf --preview 'git diff --color {}') &&
   vim $files
@@ -104,37 +96,6 @@ fvim() {
 alias fb='git checkout $(git branch -a | tr -d " " |fzf --prompt "CHECKOUT BRANCH>" --preview "git log --color=always {}" | head -n 1 | sed -e "s/^\*\s*//g" | perl -pe "s/remotes\/origin\///g")'
 alias fbb='git reflog | grep "checkout: moving from" | sed -E "s/.*moving from [^ ]* to ([^ ]*).*/\1/" | awk '\''!seen[$0]++'\'' | fzf --preview "git sw {}"'
 
-function chpwd() {
-  powered_cd_add_log
-}
-function powered_cd_add_log() {
-  local i=0
-  cat ~/.powered_cd.log | while read line; do
-    (( i++ ))
-    if [ i = 30 ]; then
-      sed -i -e "30,30d" ~/.powered_cd.log
-    elif [ "$line" = "$PWD" ]; then
-      sed -i -e "${i},${i}d" ~/.powered_cd.log
-    fi
-  done
-  echo "$PWD" >> ~/.powered_cd.log
-}
-function powered_cd() {
-  if [ $# = 0 ]; then
-    cd $(gtac ~/.powered_cd.log | fzf -m --preview "ls {}")
-  elif [ $# = 1 ]; then
-    cd $1
-  else
-    echo "powered_cd: too many arguments"
-  fi
-}
-_powered_cd() {
-  _files -/
-}
-compdef _powered_cd powered_cd
-[ -e ~/.powered_cd.log ] || touch ~/.powered_cd.log
-alias c="powered_cd"
-
 # PROMPT
 PROMPT="%{${fg[blue]}%}[%~]%{${reset_color}%}"
 
@@ -145,17 +106,86 @@ zstyle ':vcs_info:git:*' stagedstr "%F{yellow}!"
 zstyle ':vcs_info:git:*' unstagedstr "%F{red}+"
 zstyle ':vcs_info:*' formats "%F{green}%c%u[%b]%f"
 zstyle ':vcs_info:*' actionformats '[%b|%a]'
-precmd () { 
+precmd () {
   if [ $? -eq 0 ] ; then
     finish_code=0
   else
     finish_code="%{${fg[red]}%}'${$?}'%{${reset_color}%}"
   fi
-  vcs_info 
+  vcs_info
 }
 
-function command_not_found_handler() {
-  echo "misssing→「$1」";
-}
+#function command_not_found_handler() {
+#  echo "misssing→「$1」";
+#}
 PROMPT='${finish_code};'$PROMPT'${vcs_info_msg_0_}'
 #RPROMPT=$RPROMPT'${vcs_info_msg_0_}'
+export VOLTA_HOME="$HOME/.volta"
+export PATH="$VOLTA_HOME/bin:$PATH"
+
+
+# git worktree
+function wth() {
+  echo "git worktree commands:"
+  echo "  wtl                          - worktree一覧表示"
+  echo "  wtp                          - 不要なworktree情報を整理(prune)"
+  echo "  wta <branch> [path]          - 既存ブランチでworktree作成"
+  echo "  wtan <branch> [base] [path]  - 新規ブランチでworktree作成"
+  echo "  fwt                          - fzfでworktreeを選択して移動"
+  echo "  fwta                         - fzfでブランチを選択してworktree作成"
+  echo "  wtr                          - fzfでworktreeを選択して削除"
+  echo "  wth                          - このヘルプを表示"
+}
+alias wtl='git worktree list'
+alias wtp='git worktree prune'
+
+# worktreeを作成（既存ブランチ）: wta <branch-name> [path]
+function wta() {
+  local branch=$1
+  local repo=$(basename "$(git rev-parse --show-toplevel)")
+  local path=${2:-"../${repo}-${branch}"}
+  git worktree add "$path" "$branch"
+}
+
+# worktreeを作成（新規ブランチ）: wtan <new-branch-name> [base-branch] [path]
+function wtan() {
+  local branch=$1
+  local base=${2:-"HEAD"}
+  local repo=$(basename "$(git rev-parse --show-toplevel)")
+  local path=${3:-"../${repo}-${branch}"}
+  git worktree add -b "$branch" "$path" "$base"
+}
+
+# fzfでworktreeを選択して移動
+function fwt() {
+  local selected=$(git worktree list | fzf --prompt "WORKTREE>" --preview "ls -la {1}" | awk '{print $1}')
+  if [[ -n "$selected" ]]; then
+    cd "$selected"
+  fi
+}
+
+# fzfでworktreeを選択して削除
+function wtr() {
+  local selected=$(git worktree list | fzf --prompt "REMOVE WORKTREE>" --preview "ls -la {1}" | awk '{print $1}')
+  if [[ -n "$selected" ]]; then
+    echo "Removing worktree: $selected"
+    git worktree remove "$selected"
+  fi
+}
+
+# fzfでブランチを選択してworktreeを作成
+function fwta() {
+  local branch=$(git branch -a | tr -d " " | sed 's/^\*//g' | sed 's/remotes\/origin\///g' | sort -u | fzf --prompt "SELECT BRANCH>")
+  if [[ -n "$branch" ]]; then
+    local repo=$(basename "$(git rev-parse --show-toplevel)")
+    local path="../${repo}-${branch}"
+    echo "Creating worktree: $path for branch: $branch"
+    git worktree add "$path" "$branch"
+  fi
+}
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

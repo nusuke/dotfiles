@@ -1,11 +1,6 @@
 #!/bin/bash
-# dein install
-curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > ~/installer.sh
-sh ~/installer.sh ~/.cache/dein
-mv ~/.cache ~/dotfiles/
-rm ~/installer.sh
-rm -rf ~/.cache
+DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-ln -fs ~/dotfiles/_vimrc ~/.vimrc
-ln -fs ~/dotfiles/_zshrc ~/.zshrc
-
+ln -fs "$DOTFILES_DIR/_vimrc" ~/.vimrc
+ln -fs "$DOTFILES_DIR/_zshrc" ~/.zshrc
+ln -fs "$DOTFILES_DIR/gitconfig" ~/.gitconfig
