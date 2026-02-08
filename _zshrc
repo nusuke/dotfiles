@@ -5,8 +5,7 @@ alias zshrcs='source ~/.zshrc'
 alias gitconfig='vim ~/.gitconfig'
 alias sshconfig='vim ~/.ssh/config'
 alias vimrc='vim ~/.vimrc'
-alias dotfiles='cd ~/dotfiles'
-alias desktop='cd ~/desktop'
+alias desktop='cd ~/Desktop'
 alias lzd='lazydocker'
 alias idea='/Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS/idea'
 alias dcd='docker compose down'
@@ -21,25 +20,28 @@ function fm(){
 alias ghpr='gh pr create --web'
 
 
-#Java
-export PATH=$PATH:/Library/Java/JavaVirtualMachines/jdk-11.0.2.jdk/Contents/Home/bin
-export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-11.0.2.jdk/Contents/Home
-
 # zsh
-autoload -U compinit
-compinit
+autoload -Uz compinit
+if [ $(date +'%j') != $(stat -f '%Sm' -t '%j' ~/.zcompdump 2>/dev/null) ]; then
+  compinit
+else
+  compinit -C
+fi
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+zstyle ':completion:*' menu select
 
 autoload -Uz colors
 colors
 
+setopt no_beep
+typeset -U path
+
 # 履歴ファイルの保存先
 export HISTFILE=${HOME}/.zhistory
 # メモリに保存される履歴の件数
-export HISTSIZE=1000
+export HISTSIZE=100000
 # 履歴ファイルに保存される履歴の件数
 export SAVEHIST=100000
-# 重複を記録しない
-setopt hist_ignore_dups
 # historyを共有
 setopt share_history
 # ヒストリに追加されるコマンド行が古いものと同じなら古いものを削除
@@ -64,8 +66,6 @@ setopt inc_append_history
 # 全件取得
 function history-all { history -E 1 }
 
-ISTIGNORE='fg:fg *bg:bg *histroy:history *'
-
 #Directory color
 #alias ls='ls -FG'
 export LSCOLORS=cafxcxdxbxegedabagacad
@@ -75,10 +75,6 @@ alias cat='bat'
 
 # fzf
 export FZF_DEFAULT_OPTS="--height 50% --layout=reverse --border --inline-info --preview 'bat  --color=always --style=header,grid --line-range :100 {}'"
-
-function bats() {
-  $(bat $1 | fzf --preview "{}")
-}
 
 alias fr='cd ~/src/$(ghq list | fzf --tmux --reverse +m --preview "cat ~/{}/README.md")'
 gd() {
@@ -105,10 +101,11 @@ zstyle ':vcs_info:git:*' unstagedstr "%F{red}+"
 zstyle ':vcs_info:*' formats "%F{green}%c%u[%b]%f"
 zstyle ':vcs_info:*' actionformats '[%b|%a]'
 precmd () {
-  if [ $? -eq 0 ] ; then
+  local exit_code=$?
+  if [ $exit_code -eq 0 ] ; then
     finish_code=0
   else
-    finish_code="%{${fg[red]}%}'${$?}'%{${reset_color}%}"
+    finish_code="%{${fg[red]}%}${exit_code}%{${reset_color}%}"
   fi
   vcs_info
 
