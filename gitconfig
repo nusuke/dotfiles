@@ -15,3 +15,8 @@ fetch = fetch -p
 [core]
   excludesfile = ~/.gitignore.global
 
+[include]
+  path = ~/.gitconfig.local
+
+[user]
+  name = nusuke
