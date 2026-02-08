@@ -133,8 +133,8 @@ function wth() {
   echo "git worktree commands:"
   echo "  wtl                          - worktree一覧表示"
   echo "  wtp                          - 不要なworktree情報を整理(prune)"
-  echo "  wta <branch> [path]          - 既存ブランチでworktree作成"
-  echo "  wtan <branch> [base] [path]  - 新規ブランチでworktree作成"
+  echo "  wta <branch> [name]          - 既存ブランチでworktree作成"
+  echo "  wtan <branch> [base] [name]  - 新規ブランチでworktree作成"
   echo "  fwt                          - fzfでworktreeを選択して移動"
   echo "  fwta                         - fzfでブランチを選択してworktree作成"
   echo "  wtr                          - fzfでworktreeを選択して削除"
@@ -143,20 +143,24 @@ function wth() {
 alias wtl='git worktree list'
 alias wtp='git worktree prune'
 
-# worktreeを作成（既存ブランチ）: wta <branch-name> [path]
+# worktreeを作成（既存ブランチ）: wta <branch-name> [name]
 function wta() {
   local branch=$1
   local repo=$(basename "$(git rev-parse --show-toplevel)")
-  local wt_path=${2:-"../${repo}-${branch}"}
+  local name="${2:-${branch}}"
+  local wt_path="$HOME/src/worktree/${repo}-${name}"
+  mkdir -p "$HOME/src/worktree"
   git worktree add "$wt_path" "$branch"
 }
 
-# worktreeを作成（新規ブランチ）: wtan <new-branch-name> [base-branch] [path]
+# worktreeを作成（新規ブランチ）: wtan <new-branch-name> [base-branch] [name]
 function wtan() {
   local branch=$1
-  local base=${2:-"HEAD"}
+  local base=${2:-HEAD}
   local repo=$(basename "$(git rev-parse --show-toplevel)")
-  local wt_path=${3:-"../${repo}-${branch}"}
+  local name="${3:-${branch}}"
+  local wt_path="$HOME/src/worktree/${repo}-${name}"
+  mkdir -p "$HOME/src/worktree"
   git worktree add -b "$branch" "$wt_path" "$base"
 }
 
@@ -182,7 +186,8 @@ function fwta() {
   local branch=$(git branch -a | tr -d " " | sed 's/^\*//g' | sed 's/remotes\/origin\///g' | sort -u | fzf --prompt "SELECT BRANCH>")
   if [[ -n "$branch" ]]; then
     local repo=$(basename "$(git rev-parse --show-toplevel)")
-    local wt_path="../${repo}-${branch}"
+    local wt_path="$HOME/src/worktree/${repo}-${branch}"
+    mkdir -p "$HOME/src/worktree"
     echo "Creating worktree: $wt_path for branch: $branch"
     git worktree add "$wt_path" "$branch"
   fi

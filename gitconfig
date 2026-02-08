@@ -16,3 +16,6 @@ fetch = fetch -p
   excludesfile = ~/.gitignore.global
 
 
+[user]
+	name = nusuke
+	email = nusuke
